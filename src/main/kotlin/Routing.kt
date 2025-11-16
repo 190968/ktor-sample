@@ -14,25 +14,16 @@ fun Application.configureRouting() {
             val ss = call.request.headers
             call.respondText("Hello dghgfhdg  Super World! $ss")
         }
-        get("/signup") {
+        post("/anser") {
             val name = call.request.queryParameters["name"]
-
-            if (name == "bob") {
-                call.respondText(
-                    contentType = ContentType.parse("text/html"),
-                    text = """    
-                       
-                        <h2 style="margin: 200px auto; text-align: center">Hello $name. Wellcome to account</h2>
-                    """.trimIndent()
-                )
-            } else {
                 call.respondText(
                     contentType = ContentType.parse("text/html"),
                     text = """   
-                    <h2 style="margin: 200px auto">Password is wrong</h2>
+                    <h2 style="margin-top: 200px;text-align: center">Hello ${name}</h2>
+                    <p style="text-align: center">This is my answer.</p>
                     """.trimIndent()
                 )
-            }
+
         }
         get("/gpt") {
             call.respondText(
@@ -40,7 +31,7 @@ fun Application.configureRouting() {
                 text = """
                 <div style="width: 350px; margin: 200px auto; text-align: center">
                   
-                   <form action="/signup" style="height: auto;display: flex; justify-content: space-around; flex-direction: column">
+                   <form action="/anser" method="post" style="height: auto;display: flex; justify-content: space-around; flex-direction: column">
                       
                             <textarea 
                                 rows="5" 
