@@ -68,12 +68,13 @@ fun Application.configureRouting() {
             )
         }
         get("/ktor") {
+            val my_ip = call.request.origin.remoteHost
             val forwardedFor = call.request.headers["X-Forwarded-For"]
             val ip = forwardedFor?.split(",")?.firstOrNull()?.trim()
                 ?: call.request.origin.remoteHost
-            call.respondText("Hello ${ip}  Super World! ")
+            call.respondText("Hello ${ip}. This is my ip: ${my_ip} ")
         }
-        post("/ktor/answer") {
+        post("/answer") {
             val formParameters = call.receiveParameters()
             val name = formParameters["name"].toString()
             val text = formParameters["text"].toString()
