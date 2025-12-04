@@ -10,6 +10,13 @@ fun  Route.gpt() {
         call.respondText(
             contentType = ContentType.parse("text/html"),
             text = """
+                <!DOCTYPE html >
+               
+                <head>
+                    <meta charset="UTF-8">
+                    <title>All Current Tasks</title>
+                </head>
+                <body>
                 <div style="width: 350px; margin: 200px auto; text-align: center">                  
                    <form action="/ktor/answer" method="post" style="height: auto;display: flex; justify-content: space-around; flex-direction: column">
                       
@@ -22,11 +29,20 @@ fun  Route.gpt() {
                                 style="border-radius: 15px;padding: 15px; margin-top: 15px" id="name" 
                             ></textarea>                
                         
-                            <input  required placeholder="Type your name here..." style="padding: 15px; margin: 15px 0; width: 100%" type="text" name="name"/>
+                            <input  
+                                required 
+                                placeholder="Type your name here..." 
+                                style="border-radius: 15px;padding: 15px; margin: 15px 0" 
+                                type="text" name="name"
+                            />
                        
-                        <button style="border: none;font-size: 20px;padding: 15px;border-radius: 15px" type="submit">GO</button>
-                   </form>                   
-                </div>                
+                        <button style="margin-bottom: 15px; border-color: grey; font-size: 20px;padding: 15px;border-radius: 15px" type="submit">GO</button>
+                   </form>
+                   <a href="/ktor/prev" >last question</a>
+                  
+                </div> 
+                </body>
+                <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" cross origin="anonymous"></script>
                 """.trimIndent()
         )
     }
