@@ -1,11 +1,11 @@
 package com.example
 
 import com.example.routes.gpt.gpt
+import com.example.routes.ip.ip
 import com.example.routes.userRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -14,16 +14,11 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.http.ContentType
-import io.ktor.server.plugins.origin
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.utils.EmptyContent.headers
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import jdk.internal.org.jline.utils.AttributedStringBuilder.append
-import java.net.http.HttpHeaders
-
 
 
 @Serializable
@@ -69,26 +64,27 @@ fun Application.configureRouting() {
                     """.trimIndent()
             )
         }
-        get("/ktor") {
-            val my_ip = call.request.origin.remoteHost
-            val forwardedFor = call.request.headers["X-Forwarded-For"]
-            val ip = forwardedFor?.split(",")?.firstOrNull()?.trim()
-                ?: call.request.origin.remoteHost
-
-            val response: HttpResponse = client.get (  "http://ip-api.com/json/${ip}?fields=city,country" )
-            val body: String = response.body()
-            val answer = Json.decodeFromString<Ip>(body)
-
-
-            call.respondText(
-                contentType = ContentType.parse("text/html"),
-                text = """
-                <h2 style="text-align: center;margin-top: 200px">${answer.country} -  ${answer.city}  </h2>
-                <h2 style="text-align: center">Your ip:  ${ip}  </h2>
-                """.trimIndent()
-            )
-        }
-        post("/ktor/answer") {
+        ip(client)
+//        get("/ktor") {
+//            val my_ip = call.request.origin.remoteHost
+//            val forwardedFor = call.request.headers["X-Forwarded-For"]
+//            val ip = forwardedFor?.split(",")?.firstOrNull()?.trim()
+//                ?: call.request.origin.remoteHost
+//
+//            val response: HttpResponse = client.get (  "http://ip-api.com/json/${ip}?fields=city,country" )
+//            val body: String = response.body()
+//            val answer = Json.decodeFromString<Ip>(body)
+//
+//
+//            call.respondText(
+//                contentType = ContentType.parse("text/html"),
+//                text = """
+//                <h2 style="text-align: center;margin-top: 200px">${answer.country} -  ${answer.city}  </h2>
+//                <h2 style="text-align: center">Your ip:  ${ip}  </h2>
+//                """.trimIndent()
+//            )
+//        }
+        post("/answer") {
             val formParameters = call.receiveParameters()
             val name = formParameters["name"].toString()
             val text = formParameters["text"].toString()
