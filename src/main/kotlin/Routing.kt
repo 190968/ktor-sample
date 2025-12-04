@@ -75,7 +75,7 @@ fun Application.configureRouting() {
             val ip = forwardedFor?.split(",")?.firstOrNull()?.trim()
                 ?: call.request.origin.remoteHost
 
-            val response: HttpResponse = client.get (  "http://ip-api.com/json/198.244.253.161?fields=city,country" )
+            val response: HttpResponse = client.get (  "http://ip-api.com/json/${ip}?fields=city,country" )
             val body: String = response.body()
             val answer = Json.decodeFromString<Ip>(body)
 
