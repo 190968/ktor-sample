@@ -14,7 +14,7 @@ fun  Route.gpt() {
                
                 <head>
                     <meta charset="UTF-8">
-                    <title>All Current Tasks</title>
+                    <title>Gpt question</title>
                 </head>
                 <body>
                 <div style="width: 350px; margin: 200px auto; text-align: center">                  

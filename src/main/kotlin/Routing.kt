@@ -2,6 +2,7 @@ package com.example
 
 import com.example.routes.gpt.gpt
 import com.example.routes.ip.ip
+import com.example.routes.map.map
 import com.example.routes.userRoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -19,13 +20,13 @@ import kotlinx.serialization.json.Json
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-
+import io.github.cdimascio.dotenv.dotenv
 
 @Serializable
 data class Message(val sender: String, val instance: String, val message: String)
 
 @Serializable
-data class Ip(val city: String, val country: String)
+data class Ip(val city: String, val country: String, val lat: Float, val lon: Float)
 
 @Serializable
 data class Output(
@@ -39,10 +40,17 @@ fun Application.configureRouting() {
             json(Json { prettyPrint = true })
         }
     }
+    val env = environment.config.propertyOrNull("ktor.environment")?.getString()
+    val dotenv = dotenv()
+    val n8nURL = dotenv["N8N_URL"]
+    val n8nUrl = when(env) {
+        "prod" -> System.getenv("N8N_URL")
+        else -> n8nURL
+    }
     routing {
         userRoutes()
         get("/ktor/prev") {
-            val response: HttpResponse = client.post("http://144.124.245.103/n8n/webhook/APItable") {
+            val response: HttpResponse = client.post(n8nUrl) {
                 contentType(ContentType.Application.Json)
                 setBody(Message("Alex", "dsdsa", "Hello from Ktor!"))
             }
@@ -65,31 +73,13 @@ fun Application.configureRouting() {
             )
         }
         ip(client)
-//        get("/ktor") {
-//            val my_ip = call.request.origin.remoteHost
-//            val forwardedFor = call.request.headers["X-Forwarded-For"]
-//            val ip = forwardedFor?.split(",")?.firstOrNull()?.trim()
-//                ?: call.request.origin.remoteHost
-//
-//            val response: HttpResponse = client.get (  "http://ip-api.com/json/${ip}?fields=city,country" )
-//            val body: String = response.body()
-//            val answer = Json.decodeFromString<Ip>(body)
-//
-//
-//            call.respondText(
-//                contentType = ContentType.parse("text/html"),
-//                text = """
-//                <h2 style="text-align: center;margin-top: 200px">${answer.country} -  ${answer.city}  </h2>
-//                <h2 style="text-align: center">Your ip:  ${ip}  </h2>
-//                """.trimIndent()
-//            )
-//        }
-        post("/answer") {
+        post("/ktor/answer") {
+
             val formParameters = call.receiveParameters()
             val name = formParameters["name"].toString()
             val text = formParameters["text"].toString()
 
-            val response: HttpResponse = client.post("http://144.124.245.103/n8n/webhook/APIsssi") {
+            val response: HttpResponse = client.post(n8nUrl) {
                 contentType(ContentType.Application.Json)
                 setBody(Message(name, "gopol", text))
             }
@@ -122,6 +112,7 @@ fun Application.configureRouting() {
 
         }
         gpt()
+        map(env)
         post("/text") {
             val body = call.receive<String>()
             call.respond(body)

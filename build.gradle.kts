@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     implementation("io.ktor:ktor-server-status-pages:2.3.2")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
     implementation("io.ktor:ktor-server-request-validation:2.3.2")
     implementation(libs.ktor.server.core)
