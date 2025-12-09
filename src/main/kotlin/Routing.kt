@@ -42,10 +42,9 @@ fun Application.configureRouting() {
     }
     val env = environment.config.propertyOrNull("ktor.environment")?.getString()
     val dotenv = dotenv()
-    val n8nURL = dotenv["N8N_URL"]
     val n8nUrl = when(env) {
         "prod" -> System.getenv("N8N_URL")
-        else -> n8nURL
+        else -> dotenv["N8N_URL"]
     }
     routing {
         userRoutes()
