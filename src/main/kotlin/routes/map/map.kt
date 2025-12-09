@@ -7,7 +7,7 @@ import io.ktor.server.routing.get
 
 fun  Route.map(env: String?) {
 
-    get("/ktor/map") {
+    get(path = if(env == "prod") "/ktor/map" else "/map") {
         val lat  = call.queryParameters["lat"]
         val lon = call.queryParameters["lon"]
 

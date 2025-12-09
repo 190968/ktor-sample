@@ -42,14 +42,15 @@ fun Application.configureRouting() {
     }
     val env = environment.config.propertyOrNull("ktor.environment")?.getString()
 
-    val n8nUrl = when(env) {
+
+    val myUrl = when(env) {
         "prod" -> System.getenv("N8N_URL")
-        else -> "gdfgdgdfg"
+        else -> "http://144.124.245.103/n8n/webhook/APIsssi"
     }
     routing {
         userRoutes()
         get("/ktor/prev") {
-            val response: HttpResponse = client.post(n8nUrl) {
+            val response: HttpResponse = client.post(myUrl) {
                 contentType(ContentType.Application.Json)
                 setBody(Message("Alex", "dsdsa", "Hello from Ktor!"))
             }
@@ -78,7 +79,7 @@ fun Application.configureRouting() {
             val name = formParameters["name"].toString()
             val text = formParameters["text"].toString()
 
-            val response: HttpResponse = client.post(n8nUrl) {
+            val response: HttpResponse = client.post(myUrl) {
                 contentType(ContentType.Application.Json)
                 setBody(Message(name, "gopol", text))
             }
@@ -110,7 +111,7 @@ fun Application.configureRouting() {
             )
 
         }
-        gpt()
+        gpt(env)
         map(env)
         post("/text") {
             val body = call.receive<String>()

@@ -5,8 +5,8 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 
-fun  Route.gpt() {
-    get("/gpt") {
+fun  Route.gpt(env: String?) {
+    get(path = if(env == "prod") "/ktor/gpt" else "/gpt") {
         call.respondText(
             contentType = ContentType.parse("text/html"),
             text = """
