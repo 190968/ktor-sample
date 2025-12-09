@@ -20,7 +20,7 @@ import kotlinx.serialization.json.Json
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import io.github.cdimascio.dotenv.dotenv
+//import io.github.cdimascio.dotenv.dotenv
 
 @Serializable
 data class Message(val sender: String, val instance: String, val message: String)
@@ -41,10 +41,10 @@ fun Application.configureRouting() {
         }
     }
     val env = environment.config.propertyOrNull("ktor.environment")?.getString()
-    val dotenv = dotenv()
+
     val n8nUrl = when(env) {
         "prod" -> System.getenv("N8N_URL")
-        else -> dotenv["N8N_URL"]
+        else -> "gdfgdgdfg"
     }
     routing {
         userRoutes()
