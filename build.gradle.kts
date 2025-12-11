@@ -19,8 +19,11 @@ repositories {
 dependencies {
     implementation("io.ktor:ktor-server-status-pages:2.3.2")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-
+    implementation("io.ktor:ktor-server-swagger:2.3.2")
+    implementation("io.ktor:ktor-server-cors:2.3.2")
+    implementation("io.ktor:ktor-server-openapi:2.3.2")
     implementation("io.ktor:ktor-server-request-validation:2.3.2")
+    implementation("io.swagger.codegen.v3:swagger-codegen-generators:1.0.58")
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)

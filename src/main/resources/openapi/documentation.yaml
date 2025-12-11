@@ -1,0 +1,34 @@
+openapi: "3.0.3"
+info:
+  title: "Products API"
+  description: "API to create and retrieve Products"
+  version: "1.0.0"
+servers:
+  - url: "http://44.124.245.103"
+paths:
+  /ktor/answer:
+    post:
+      description: "request to gpt chat"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/answer"
+      responses:
+        "201":
+          description: "answer"
+components:
+  schemas:
+    answer:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "How are you?"
+        name:
+          type: string
+          example: "Bob"
+      required:
+        - name
+        - text

@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 fun  Route.ip(client: HttpClient) {
     get("/ktor") {
         val env = environment.config.propertyOrNull("ktor.environment")?.getString()
+        println(env)
         val forwardedFor = call.request.headers["X-Forwarded-For"]
         val ip = when(env) {
             "dev" -> "146.19.136.111"

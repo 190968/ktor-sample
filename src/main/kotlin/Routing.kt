@@ -3,7 +3,7 @@ package com.example
 import com.example.routes.gpt.gpt
 import com.example.routes.ip.ip
 import com.example.routes.map.map
-import com.example.routes.userRoutes
+import com.example.routes.prevmessage.prev
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -20,7 +20,10 @@ import kotlinx.serialization.json.Json
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-//import io.github.cdimascio.dotenv.dotenv
+import io.ktor.server.plugins.openapi.openAPI
+import io.ktor.server.plugins.swagger.*
+import io.swagger.codegen.v3.generators.html.*
+
 
 @Serializable
 data class Message(val sender: String, val instance: String, val message: String)
@@ -48,30 +51,8 @@ fun Application.configureRouting() {
         else -> "http://144.124.245.103/n8n/webhook/APIsssi"
     }
     routing {
-        userRoutes()
-        get("/ktor/prev") {
-            val response: HttpResponse = client.post(myUrl) {
-                contentType(ContentType.Application.Json)
-                setBody(Message("Alex", "dsdsa", "Hello from Ktor!"))
-            }
 
-            val body: String = response.body()
-            val anser = Json.decodeFromString<Output>(body)
 
-            call.respondText(
-                contentType = ContentType.parse("text/html"),
-                text = """ 
-                    <div style="width: 350px; margin: 200px auto; text-align: center">     
-                    <h4 style="margin-top: 200px;text-align: left">Question:</h4>
-                    <p>${anser.message}</p>
-                    <h4 style="margin-top: 20px;text-align: left">Answer:</h4>
-                    <p style="text-align: center; font-size: 17px">${anser.response} .</p>
-                    <a href="/gpt">Next question</a>                    
-                    <a style="margin-left: 20px" href="/ktor/prev">Prev question</a>
-                    </div>
-                    """.trimIndent()
-            )
-        }
         ip(client)
         post("/ktor/answer") {
 
@@ -81,7 +62,7 @@ fun Application.configureRouting() {
 
             val response: HttpResponse = client.post(myUrl) {
                 contentType(ContentType.Application.Json)
-                setBody(Message(name, "gopol", text))
+                setBody(Message(name, "none", text))
             }
 
             val body: String = response.body()
@@ -111,11 +92,12 @@ fun Application.configureRouting() {
             )
 
         }
+        prev(client, myUrl)
         gpt(env)
         map(env)
-        post("/text") {
-            val body = call.receive<String>()
-            call.respond(body)
+        swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml") {
+            version = "4.15.5"
         }
+
     }
 }
